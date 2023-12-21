@@ -4,5 +4,5 @@ Inkpad is an demo app that came bundled with Windows 8 Developer Preview, this p
 ## what it does?
 it's basically a metro (_modern_) version of Microsoft Paint, made to showcase the new metro apps ecosystem.
 ## to-do
-– [ ] fix inkinitialize TypeError: Object expected
-– [ ] fix painting
+- [ ] fix inkInitialize
+- [ ] fix painting
