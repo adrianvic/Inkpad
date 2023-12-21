@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>InkPad</title>
+    <meta content="IE=10" http-equiv="X-UA-Compatible"/>
+    <!-- Include AppBar component -->
+    <link href="css/ui-light.css" rel="stylesheet" type="text/css"/>
+    <script src="base.js"       type="text/javascript"></script>
+    <script src="ui.js"         type="text/javascript"></script>
+    <script src="binding.js"    type="text/javascript"></script>
+    <script src="controls.js"   type="text/javascript"></script>
+    <script src="animations.js" type="text/javascript"></script>
+    <script src="wwaapp.js"     type="text/javascript"></script>
+
+    <link href="css/program.css" rel="stylesheet" type="text/css"/>
+    <script src="program.js"    type="text/javascript"></script>
+
+	<script>
+		// Stock appbar initialization
+		document.addEventListener("DOMContentLoaded", function() {WinJS.UI.processAll();}, false);
+
+        // Helper function to toggle the flyout
+        function toggleFlyout(flyoutElement, buttonElement)
+        {
+            var flyout = WinJS.UI.getControl(flyoutElement);
+            if (flyout && flyout.element.style.visibility !== "visible")
+            {
+                flyout.show(buttonElement, "top");
+            }
+            // else it will light-dismiss
+        }
+	</script>
+</head>
+
+<body role="application">
+    <div id="rootGrid">
+        <div id="content" aria-labelledby="featureLabel" role="main">
+            <!-- These 3 canvases are displayed directly on top of each other.     -->
+
+            <div id="canvasGroup" aria-label="Ink canvas" role="img" >                
+	            <canvas id="HighlightCanvas" class="surface"></canvas>
+	            <canvas id="InkCanvas"       class="surface"></canvas>
+	            <canvas id="SelectCanvas"    class="surface"></canvas>
+            </div>
+
+            <!-- The statusMessage item displays status and error messages, and also the recognition results.    -->
+
+            <div id="statusMessage" aria-label="Recognition results" aria-live="polite" role="region"></div>
+
+            <!-- The Reco Flyout contains 5 submit buttons laid out vertically.
+                        At the time the form is displayed, we set the values of the buttons to the recognition alternates
+                        for a specific word.  All 5 buttons execute the same function, recoClipboard(), which
+                        copies that value into the clipboard.    -->
+
+            <div id="RecoFlyout" class="win-menu" aria-label="Reco options" data-win-control="WinJS.UI.Flyout" role="dialog">
+                <h4>Copy to clipboard:</h4>
+                <button id="Reco0" role="menuitem"></button>
+                <button id="Reco1" role="menuitem"></button>
+                <button id="Reco2" role="menuitem"></button>
+                <button id="Reco3" role="menuitem"></button>
+                <button id="Reco4" role="menuitem"></button>
+            </div>
+
+            <!-- This toolbar is displayed across the bottom of the screen.
+                        The bottons are shown as cirles with icons in the middle.  The color buttons have IDs
+                        which are the names of colors; the ID of each one is fed directly into the strokeStyle
+                        of the corresponding canvas.                -->
+
+            <div id="bottomAppBar" aria-label="Command Bar" data-win-control="WinJS.UI.AppBar" data-win-options="{position:'bottom',transient:true,autoHide:0,lightDismiss:true}">
+	            <div class="win-right">
+	                <button id="Reco" class="win-command" >
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/Reco.png')"></span>
+	                    <span class="win-label">Recognize</span>
+	                </button>
+
+	                <button id="Find" class="win-command" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/Find.png')"></span>
+	                    <span class="win-label">Find</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+					<div id="FindFlyout" class="win-menu" aria-label="Find" data-win-control="WinJS.UI.Flyout">
+                        <h3>Find:</h3>
+                        <input id="FindString" aria-label="Search string" maxlength="100" size="40" type="text" value=""/>
+                        <br />
+        				<button id="FindButton">Find</button>	
+					</div>
+
+	                <hr />
+
+	                <button id="ModeErase" class="win-command" >
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/Eraser.png')"></span>
+	                    <span class="win-label">Erase</span>
+	                </button>
+	                <button id="ModeSelect" class="win-command" >
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/Lasso.png')"></span>
+	                    <span class="win-label">Select</span>
+	                </button>
+
+	                <hr />
+
+	                <button id="InkColors" class="win-command" aria-haspopup="true" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/InkColors.png')"></span>
+	                    <span class="win-label">Color</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+					<div id="InkColorFlyout" class="win-menu" aria-label="Ink Colors" data-win-control="WinJS.UI.Flyout">
+						<div id="Black" class="color-choice" style="background-color: Black;"></div>
+						<div id="Blue"  class="color-choice" style="background-color: Blue;" ></div>
+						<div id="Red"   class="color-choice" style="background-color: Red;"  ></div>
+						<div id="Green" class="color-choice" style="background-color: Green;"></div>
+					</div>
+
+	                <button id="InkWidth" class="win-command" aria-haspopup="true" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/InkWidth.png')"></span>
+	                    <span class="win-label">Width</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+	                <div id="InkWidthFlyout" class="win-menu" aria-label="Ink Widths" data-win-control="WinJS.UI.Flyout">
+			            <button id="IW2"  role="menuitem" value="2" >Smallest</button>
+			            <button id="IW4"  role="menuitem" value="4" >Small</button>
+			            <button id="IW6"  role="menuitem" value="6" >Medium</button>
+			            <button id="IW8"  role="menuitem" value="8" >Large</button>
+			            <button id="IW10" role="menuitem" value="10">Largest</button>
+	                </div>
+
+	                <hr />
+
+	                <button id="HighlightColors" class="win-command" aria-haspopup="true" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/HighlightColors.png')"></span>
+	                    <span class="win-label">Highlight Color</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+					<div id="HighlightColorFlyout" class="win-menu" aria-label="Highlighter Colors" data-win-control="WinJS.UI.Flyout">
+						<div id="Yellow" class="color-choice" style="background-color: Yellow;"></div>
+						<div id="Aqua"   class="color-choice" style="background-color: Aqua;"  ></div>
+						<div id="Lime"   class="color-choice" style="background-color: Lime;"  ></div>
+					</div>
+
+	                <button id="HighlightWidth" class="win-command" aria-haspopup="true" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/HighlightWidth.png')"></span>
+	                    <span class="win-label">Highlight Width</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+	                <div id="HighlightWidthFlyout" class="win-menu" aria-label="Highlighter Widths" data-win-control="WinJS.UI.Flyout">
+			            <button id="HW10" role="menuitem" value="10">Small</button>
+			            <button id="HW20" role="menuitem" value="20">Medium</button>
+			            <button id="HW30" role="menuitem" value="30">Large</button>
+	                </div>
+
+	                <hr />
+
+	                <button id="More" class="win-command" aria-haspopup="true" onclick="toggleFlyout(this.nextElementSibling, this);">
+	                    <span class="win-spritestates win-commandicon win-large" style="background-image:url('images/More.png')"></span>
+	                    <span class="win-label">More</span>
+	                </button>
+                    <!-- The onclick above expects this to immediately follow the button -->
+	                <div id="MoreFlyout" class="win-menu" aria-label="More Commands" data-win-control="WinJS.UI.Flyout">
+                    	<button id="CopySelected" role="menuitem">Copy</button>
+                    	<button id="Paste"        role="menuitem">Paste</button>
+                    	<button id="Load"         role="menuitem">Load</button>
+                    	<button id="Save"         role="menuitem">Save</button>
+                    	<button id="Clear"        role="menuitem">Clear</button>
+	                </div>
+	            </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

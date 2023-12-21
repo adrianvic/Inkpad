@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="Microsoft.InkPad" Version="1.0.0.5" Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" ProcessorArchitecture="neutral" />
+  <Properties>
+    <DisplayName>InkPad</DisplayName>
+    <PublisherDisplayName>Microsoft Corporation</PublisherDisplayName>
+    <Description>InkPad - A sample of modern inking</Description>
+    <Logo>images\inkPad_56x-store.png</Logo>
+  </Properties>
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  <Prerequisites>
+    <OSMinVersion>6.2</OSMinVersion>
+    <OSMaxVersionTested>6.2</OSMaxVersionTested>
+  </Prerequisites>
+  <Applications>
+    <Application Id="Microsoft.SDKSamples.InkPad" StartPage="default.html">
+      <VisualElements DisplayName="InkPad" Logo="images\inkpad-tile.png" SmallLogo="images\inkPad-time_30x30.png" Description="SDK Sample" ForegroundText="dark" BackgroundColor="#b2815a" ToastCapable="false">
+        <DefaultTile ShortName="InkPad" ShowName="false" />
+        <SplashScreen BackgroundColor="white" Image="images\inkPad_splash.png" />
+      </VisualElements>
+    </Application>
+  </Applications>
+</Package>
