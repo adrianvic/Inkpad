@@ -14,7 +14,7 @@ function showMessage(message, isError)
     if (status)
     {
         status.innerText = message;
-        status.style.color = isError ? "blue" : "green";
+        status.style.color = isError ? "red" : "green";
     }
 }
 
@@ -1790,7 +1790,7 @@ function inkInitialize()
     }
     catch (e)
     {
-        displayError("inkError" + e.message);
+        displayError("inkInitialize " + e.toString() + "\n" + e.stack);
     }
 }
 
