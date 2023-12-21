@@ -17,7 +17,7 @@
   <Applications>
     <Application Id="Microsoft.SDKSamples.InkPad" StartPage="default.html">
       <VisualElements DisplayName="InkPad" Logo="images\inkpad-tile.png" SmallLogo="images\inkPad-time_30x30.png" Description="SDK Sample" ForegroundText="dark" BackgroundColor="#b2815a" ToastCapable="false">
-        <DefaultTile ShortName="InkPad" ShowName="false" />
+        <DefaultTile ShortName="InkPad" />
         <SplashScreen BackgroundColor="white" Image="images\inkPad_splash.png" />
       </VisualElements>
     </Application>

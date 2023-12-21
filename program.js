@@ -1790,7 +1790,7 @@ function inkInitialize()
     }
     catch (e)
     {
-        displayError("inkInitialize " + e.toString());
+        displayError("inkError" + e.message);
     }
 }
 
